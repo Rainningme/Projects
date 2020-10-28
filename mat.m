@@ -33,7 +33,7 @@ for i = 1:760
             m2 = stress2*As2*(h0-x(j));
             m(i) = mcc + mct + m1 + m2;
             break
-        elseif c > t
+        elseif c > t % 二分法
             x(j-1) = min(x(j-2), x(j-1));
         else
             x(j-1) = max(x(j-2), x(j-1));
@@ -44,4 +44,27 @@ end
 
 plot(1000*a, m/1000000); grid; xlabel('φ 单位：1/m'); ylabel('M 单位：kN*m'); title('M-φ 关系图')
 
-        
+function y = fun1(s)        
+Es = 200000;
+if s <= 0.0014
+    y = Es*s;
+else
+    y = 280;
+end
+
+function y = fun2(s)
+    fc = 13.4;
+    s0 = 0.002;
+if s <= s0
+    y = fc*(1-(1-s/s0)^2);
+else
+    y = fc*((0.0038-0.85*s0-0.15*s)/(0.0038-s0));
+end
+
+function y = fun3(s)
+Ec = 25500; ft = 1.54;
+if Ec*s <= ft
+    y = Ec*s;
+else
+    y = 0;
+end
